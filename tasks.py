@@ -52,6 +52,26 @@ def cmd_screenshot():
     return run([PYTHON, "utils/screenshot_report.py"])
 
 
+def cmd_screenshot_api():
+    """Take screenshot of API test report only"""
+    return run([PYTHON, "-c",
+        "from utils.screenshot_report import generate_report, capture_report_screenshot, filter_allure_results; "
+        "filter_allure_results('allure-results', 'allure-results-api', 'petstore/tests') and "
+        "generate_report('allure-results-api', 'allure-report-api') and "
+        "capture_report_screenshot('allure-report-api', output_name='api')"
+    ])
+
+
+def cmd_screenshot_ui():
+    """Take screenshot of UI test report only"""
+    return run([PYTHON, "-c",
+        "from utils.screenshot_report import generate_report, capture_report_screenshot, filter_allure_results; "
+        "filter_allure_results('allure-results', 'allure-results-ui', 'saucedemo/tests') and "
+        "generate_report('allure-results-ui', 'allure-report-ui') and "
+        "capture_report_screenshot('allure-report-ui', output_name='ui')"
+    ])
+
+
 def cmd_clean():
     """Remove generated files"""
     for d in ["allure-results", "allure-report", "reports", "screenshots", ".pytest_cache"]:
@@ -59,6 +79,14 @@ def cmd_clean():
         if os.path.isdir(path):
             shutil.rmtree(path)
             print(f"  removed {d}/")
+    for d in glob.glob(os.path.join(ROOT, "allure-report-*")):
+        if os.path.isdir(d):
+            shutil.rmtree(d)
+            print(f"  removed {os.path.basename(d)}/")
+    for d in glob.glob(os.path.join(ROOT, "allure-results-*")):
+        if os.path.isdir(d):
+            shutil.rmtree(d)
+            print(f"  removed {os.path.basename(d)}/")
     for pycache in glob.glob(os.path.join(ROOT, "**", "__pycache__"), recursive=True):
         if ".venv" not in pycache:
             shutil.rmtree(pycache)
@@ -74,6 +102,8 @@ COMMANDS = {
     "test_parallel": cmd_test_parallel,
     "report":        cmd_report,
     "screenshot":    cmd_screenshot,
+    "screenshot_api": cmd_screenshot_api,
+    "screenshot_ui": cmd_screenshot_ui,
     "clean":         cmd_clean,
 }
 

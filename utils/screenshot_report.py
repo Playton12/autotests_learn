@@ -1,10 +1,10 @@
+import glob
+import json
 import logging
-import os
 import shutil
 import subprocess
 import threading
 import time
-from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
@@ -35,7 +35,40 @@ def generate_report(results_dir="allure-results", report_dir="allure-report") ->
         return False
 
 
-def capture_report_screenshot(report_dir="allure-report", output_dir="screenshots", timeout=15):
+def filter_allure_results(src_dir: str, dest_dir: str, test_dir_prefix: str) -> bool:
+    src = Path(src_dir)
+    if not src.exists():
+        return False
+
+    result_files = glob.glob(str(src / "*-result.json"))
+    matching_uuids = set()
+
+    for rf in result_files:
+        try:
+            with open(rf) as f:
+                data = json.load(f)
+            full_name = data.get("fullName", "") or data.get("name", "")
+            if test_dir_prefix in full_name:
+                uuid = Path(rf).stem.replace("-result", "")
+                matching_uuids.add(uuid)
+        except (json.JSONDecodeError, OSError):
+            continue
+
+    if not matching_uuids:
+        return False
+
+    dest = Path(dest_dir)
+    dest.mkdir(parents=True, exist_ok=True)
+
+    for f in src.iterdir():
+        if f.name.startswith(tuple(matching_uuids)):
+            shutil.copy2(f, dest / f.name)
+
+    logger.info("Filtered %d test results to %s", len(matching_uuids), dest_dir)
+    return True
+
+
+def capture_report_screenshot(report_dir="allure-report", output_name="report", output_dir="screenshots", timeout=15):
     report_path = Path(report_dir).resolve()
     if not (report_path / "index.html").exists():
         logger.warning("Report index.html not found at %s", report_path)
@@ -75,9 +108,9 @@ def capture_report_screenshot(report_dir="allure-report", output_dir="screenshot
         d.set_window_size(1440, max(900, total_height))
         time.sleep(2)
 
-        Path(output_dir).mkdir(parents=True, exist_ok=True)
-        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        screenshot_path = Path(output_dir) / f"allure_report_{ts}.png"
+        out = Path(output_dir)
+        out.mkdir(parents=True, exist_ok=True)
+        screenshot_path = out / f"{output_name}.png"
         d.save_screenshot(str(screenshot_path))
         logger.info("Report screenshot saved to %s", screenshot_path)
         d.quit()

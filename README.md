@@ -1,6 +1,9 @@
 # Autotests Project
 
-API и UI автотесты. API тесты идут против Mock Petstore (http.server, stdlib) — никаких внешних зависимостей. UI тесты идут против https://www.saucedemo.com через Selenium + ChromeDriver (webdriver-manager).
+API и UI автотесты для Swagger Petstore и SauceDemo.
+
+- **API тесты** — Mock Petstore на `http.server` (stdlib), никаких внешних зависимостей
+- **UI тесты** — SauceDemo через Selenium + ChromeDriver (Selenium Manager)
 
 ## Установка
 
@@ -33,16 +36,19 @@ pytest -n auto
 
 ## Генерация отчёта
 
-Отчёт генерируется автоматически после каждого прогона тестов.
-Для ручной генерации и просмотра:
+Отчёт и скриншоты генерируются автоматически после каждого прогона тестов.
 
-```bash
-python tasks.py report
-```
+Скриншоты сохраняются в `screenshots/` с фиксированными именами:
+- `screenshots/all.png` — все тесты
+- `screenshots/api.png` — только API тесты
+- `screenshots/ui.png` — только UI тесты
 
-Для скриншота отчёта:
+Для ручной генерации:
 ```bash
-python tasks.py screenshot
+python tasks.py report          # открыть Allure отчёт
+python tasks.py screenshot      # скриншот отчёта (все тесты)
+python tasks.py screenshot-api  # скриншот API отчёта
+python tasks.py screenshot-ui   # скриншот UI отчёта
 ```
 
 ## Очистка
@@ -59,36 +65,46 @@ python tasks.py --help
 ## Структура проекта
 
 ```
-├── config/              # Конфигурация (.env → settings.py)
-├── api/                 # API клиент и эндпоинты
-├── schemas/             # Pydantic-схемы валидации
-├── pages/               # Page Object Model для UI
-├── utils/               # Общая инфраструктура
-│   └── mock_server.py   # Mock Petstore на http.server
-├── tests/
-│   ├── api/             # API-тесты (pytest -m api)
-│   └── ui/              # UI-тесты (pytest -m ui)
-├── browser_utils.py     # Поиск браузера
-├── screenshot_report.py # Скриншот Allure-отчёта
-├── tasks.py             # Команды для разработчика
-├── conftest.py          # Корневой conftest (mock server, base_url)
-├── pyproject.toml       # Конфигурация проекта
-├── docker-compose.yml   # Локальный Petstore
-├── .env.example         # Шаблон переменных окружения
-└── requirements.txt     # Зависимости
+├── config/                  # Конфигурация (.env → settings.py)
+├── petstore/                # API тесты (Swagger Petstore)
+│   ├── api/                 # API клиент и эндпоинты
+│   │   ├── client.py
+│   │   └── endpoints/
+│   ├── schemas/             # Pydantic-схемы валидации
+│   ├── mock_server.py       # Mock Petstore на http.server
+│   └── tests/               # API-тесты (pytest -m api)
+├── saucedemo/               # UI тесты (SauceDemo)
+│   ├── pages/               # Page Object Model
+│   └── tests/               # UI-тесты (pytest -m ui)
+├── utils/                   # Общая инфраструктура
+│   ├── browser_utils.py     # Поиск браузера
+│   └── screenshot_report.py # Скриншот Allure-отчёта
+├── conftest.py              # Корневой conftest (mock server, base_url)
+├── tasks.py                 # Команды для разработчика
+├── pyproject.toml           # Конфигурация проекта
+├── .env.example             # Шаблон переменных окружения
+└── requirements.txt         # Зависимости
 ```
+
+## Отчёт — API тесты
+
+![API tests](screenshots/api.png)
+
+## Отчёт — UI тесты
+
+![UI tests](screenshots/ui.png)
+
+## Отчёт — Все тесты
+
+![All tests](screenshots/all.png)
 
 ## Mock Petstore
 
-`utils/mock_server.py` имплементирует REST-endpoints:
+`petstore/mock_server.py` имплементирует REST-endpoints:
 - `POST /v2/pet` — создать питомца
 - `GET /v2/pet/{id}` — получить по ID
 - `PUT /v2/pet` — обновить
 - `DELETE /v2/pet/{id}` — удалить
 - `GET /v2/pet/findByStatus` — поиск по статусу
 
-Стартует автоматически в conftest.py, если реальный Petstore недоступен.
-Для запуска реального Petstore локально:
-```bash
-docker compose up -d
-```
+Стартует автоматически в conftest.py.
