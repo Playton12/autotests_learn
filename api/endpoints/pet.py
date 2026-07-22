@@ -1,3 +1,5 @@
+import json
+
 import allure
 from api.client import APIClient
 
@@ -11,7 +13,7 @@ class PetEndpoint:
     def _parse_response(response) -> tuple[dict | list | None, int]:
         try:
             return response.json(), response.status_code
-        except Exception:
+        except (json.JSONDecodeError, ValueError):
             return None, response.status_code
 
     @allure.step("Create pet")

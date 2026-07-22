@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 def find_browser() -> str | None:
-    for name in ("chrome", "chromium", "firefox"):
+    for name in ("chrome", "google-chrome", "google-chrome-stable", "chromium", "firefox"):
         found = shutil.which(name)
         if found:
             return found

@@ -11,6 +11,11 @@ class MockPetstoreHandler(BaseHTTPRequestHandler):
     pets = {}
     next_id = 1001
 
+    @classmethod
+    def reset(cls):
+        cls.pets = {}
+        cls.next_id = 1001
+
     def _send_json(self, data, code=200):
         self.send_response(code)
         self.send_header("Content-Type", "application/json")
@@ -19,7 +24,13 @@ class MockPetstoreHandler(BaseHTTPRequestHandler):
 
     def _read_body(self) -> dict:
         length = int(self.headers.get("Content-Length", 0))
-        return json.loads(self.rfile.read(length)) if length else {}
+        if not length:
+            return {}
+        raw = self.rfile.read(length)
+        try:
+            return json.loads(raw)
+        except (json.JSONDecodeError, ValueError):
+            return {}
 
     def _get_path(self):
         return urlparse(self.path).path.rstrip("/")
@@ -101,6 +112,7 @@ class MockPetstoreServer:
     def __init__(self, host="127.0.0.1", port=0):
         self.host = host
         self.port = port
+        MockPetstoreHandler.reset()
         threading.Thread(target=self._start, daemon=True).start()
 
     def _start(self):

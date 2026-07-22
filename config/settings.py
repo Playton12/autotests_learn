@@ -18,4 +18,7 @@ UI_USERNAME = os.getenv("UI_USERNAME", "standard_user")
 UI_PASSWORD = os.getenv("UI_PASSWORD", "secret_sauce")
 HEADLESS = os.getenv("HEADLESS", "false").lower() == "true"
 BROWSER = os.getenv("BROWSER", "chrome")
-WAIT_TIMEOUT = int(os.getenv("WAIT_TIMEOUT", "10"))
+try:
+    WAIT_TIMEOUT = int(os.getenv("WAIT_TIMEOUT", "10"))
+except ValueError:
+    WAIT_TIMEOUT = 10

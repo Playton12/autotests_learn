@@ -1,6 +1,6 @@
 import requests
 import allure
-from config.settings import BASE_URL, API_KEY
+from config.settings import BASE_URL, API_KEY, WAIT_TIMEOUT
 
 
 class APIClient:
@@ -14,6 +14,7 @@ class APIClient:
     def _inject_api_key(self, kwargs: dict) -> dict:
         if API_KEY and API_KEY != "your_api_key_here":
             kwargs["params"] = {**kwargs.get("params", {}), "api_key": API_KEY}
+        kwargs.setdefault("timeout", WAIT_TIMEOUT)
         return kwargs
 
     @allure.step("Send GET request to {endpoint}")

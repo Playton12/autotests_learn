@@ -8,34 +8,34 @@ from pages.login_page import LoginPage
 @pytest.mark.regression
 class TestLoginErrors:
     @allure.title("Login with wrong password shows error")
-    def test_wrong_password(self, driver):
+    def test_wrong_password(self, driver, credentials):
         login_page = LoginPage(driver)
         login_page.open()
-        login_page.login("standard_user", "wrong_password")
+        login_page.login(credentials["username"], "wrong_password")
         error = login_page.get_error_message()
         assert "Username and password do not match" in error
 
     @allure.title("Login with locked user shows error")
-    def test_locked_user(self, driver):
+    def test_locked_user(self, driver, credentials):
         login_page = LoginPage(driver)
         login_page.open()
-        login_page.login("locked_out_user", "secret_sauce")
+        login_page.login("locked_out_user", credentials["password"])
         error = login_page.get_error_message()
         assert "Sorry, this user has been locked out" in error
 
     @allure.title("Login with empty username shows error")
-    def test_empty_username(self, driver):
+    def test_empty_username(self, driver, credentials):
         login_page = LoginPage(driver)
         login_page.open()
-        login_page.login("", "secret_sauce")
+        login_page.login("", credentials["password"])
         error = login_page.get_error_message()
         assert "Username is required" in error
 
     @allure.title("Login with empty password shows error")
-    def test_empty_password(self, driver):
+    def test_empty_password(self, driver, credentials):
         login_page = LoginPage(driver)
         login_page.open()
-        login_page.login("standard_user", "")
+        login_page.login(credentials["username"], "")
         error = login_page.get_error_message()
         assert "Password is required" in error
 

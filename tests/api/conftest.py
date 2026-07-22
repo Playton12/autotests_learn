@@ -16,8 +16,8 @@ def pet_endpoint(api_client):
 
 
 @pytest.fixture
-def sample_pet():
-    return {
+def sample_pet(pet_endpoint):
+    pet = {
         "id": uuid.uuid4().int >> 96,
         "name": "Buddy",
         "status": "available",
@@ -25,3 +25,8 @@ def sample_pet():
         "category": {"id": 1, "name": "Dogs"},
         "tags": [{"id": 1, "name": "friendly"}],
     }
+    yield pet
+    try:
+        pet_endpoint.delete(pet["id"])
+    except Exception:
+        pass

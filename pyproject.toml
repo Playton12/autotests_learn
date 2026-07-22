@@ -1,0 +1,25 @@
+[project]
+name = "autotests"
+version = "1.0.0"
+description = "API и UI автотесты для Swagger Petstore и SauceDemo"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "api: API tests",
+    "ui: UI tests",
+    "smoke: Smoke tests",
+    "regression: Regression tests",
+]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--alluredir=allure-results",
+    "--clean-alluredir",
+    "--reruns=2",
+    "--reruns-delay=3",
+    "--html=reports/report.html",
+    "--self-contained-html",
+]

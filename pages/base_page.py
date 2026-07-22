@@ -1,5 +1,4 @@
 import allure
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
@@ -38,11 +37,3 @@ class BasePage:
     @allure.step("Get text from: {locator}")
     def get_text(self, locator: tuple) -> str:
         return self.find(locator).text
-
-    @allure.step("Check if element is visible: {locator}")
-    def is_visible(self, locator: tuple) -> bool:
-        try:
-            self.wait.until(EC.visibility_of_element_located(locator))
-            return True
-        except TimeoutException:
-            return False

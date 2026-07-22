@@ -19,11 +19,3 @@ class PetSchema(BaseModel):
     photoUrls: list[str] = Field(default_factory=list)
     tags: list[Tag] = Field(default_factory=list)
     status: str = Field(default="available", pattern=r"^(available|pending|sold)$")
-
-
-class PetCreateSchema(BaseModel):
-    name: str
-    photoUrls: list[str] = Field(default_factory=list)
-    status: str = Field(default="available", pattern=r"^(available|pending|sold)$")
-    category: Optional[Category] = None
-    tags: list[Tag] = Field(default_factory=list)
