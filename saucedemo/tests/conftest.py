@@ -1,12 +1,9 @@
 import logging
-import time
 
 import allure
 import pytest
 from selenium import webdriver
 from selenium.common.exceptions import InvalidSessionIdException, WebDriverException
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common.keys import Keys
 
 from utils.browser_utils import find_browser
 from config.settings import BROWSER, HEADLESS, UI_PASSWORD, UI_USERNAME
@@ -14,23 +11,6 @@ from config.settings import BROWSER, HEADLESS, UI_PASSWORD, UI_USERNAME
 logger = logging.getLogger(__name__)
 
 _has_browser = find_browser()
-
-
-def _dismiss_any_dialog(d):
-    try:
-        for _ in range(3):
-            alert = d.switch_to.alert
-            alert.accept()
-            time.sleep(0.5)
-    except Exception:
-        pass
-    try:
-        ActionChains(d).send_keys(Keys.ESCAPE).perform()
-        time.sleep(0.3)
-        ActionChains(d).send_keys(Keys.ENTER).perform()
-        time.sleep(0.3)
-    except Exception:
-        pass
 
 
 def _create_chrome_driver(binary: str | None = None) -> webdriver.Chrome:
@@ -75,7 +55,6 @@ def driver():
             d = _create_chrome_driver(_has_browser)
 
         d.set_window_size(1920, 1080)
-        _dismiss_any_dialog(d)
         yield d
     except WebDriverException as e:
         if d is not None:

@@ -12,7 +12,7 @@ class APIClient:
         })
 
     def _inject_api_key(self, kwargs: dict) -> dict:
-        if API_KEY and API_KEY != "your_api_key_here":
+        if API_KEY:
             kwargs["params"] = {**kwargs.get("params", {}), "api_key": API_KEY}
         kwargs.setdefault("timeout", WAIT_TIMEOUT)
         return kwargs
