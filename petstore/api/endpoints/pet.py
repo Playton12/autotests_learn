@@ -1,7 +1,7 @@
 import json
 
 import allure
-from api.client import APIClient
+from petstore.api.client import APIClient
 
 
 class PetEndpoint:

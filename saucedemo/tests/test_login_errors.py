@@ -1,6 +1,6 @@
 import allure
 import pytest
-from pages.login_page import LoginPage
+from saucedemo.pages.login_page import LoginPage
 
 
 @allure.feature("Login")

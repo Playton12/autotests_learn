@@ -8,7 +8,7 @@ from selenium.common.exceptions import InvalidSessionIdException, WebDriverExcep
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-from browser_utils import find_browser
+from utils.browser_utils import find_browser
 from config.settings import BROWSER, HEADLESS, UI_PASSWORD, UI_USERNAME
 
 logger = logging.getLogger(__name__)

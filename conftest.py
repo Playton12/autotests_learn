@@ -4,7 +4,7 @@ import time
 import pytest
 import requests
 
-from utils.mock_server import MockPetstoreServer
+from petstore.mock_server import MockPetstoreServer
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ def _is_petstore_reachable(base_url: str) -> bool:
 @pytest.hookimpl(trylast=True)
 def pytest_sessionfinish(session, exitstatus):
     try:
-        from screenshot_report import generate_report, capture_report_screenshot
+        from utils.screenshot_report import generate_report, capture_report_screenshot
         if generate_report():
             capture_report_screenshot()
     except Exception as e:

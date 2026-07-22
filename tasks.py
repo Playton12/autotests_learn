@@ -49,7 +49,7 @@ def cmd_report():
 
 def cmd_screenshot():
     """Take screenshot of Allure report"""
-    return run([PYTHON, "screenshot_report.py"])
+    return run([PYTHON, "utils/screenshot_report.py"])
 
 
 def cmd_clean():

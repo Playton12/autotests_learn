@@ -5,7 +5,7 @@ description = "API и UI автотесты для Swagger Petstore и SauceDemo
 requires-python = ">=3.12"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["petstore/tests", "saucedemo/tests"]
 markers = [
     "api: API tests",
     "ui: UI tests",

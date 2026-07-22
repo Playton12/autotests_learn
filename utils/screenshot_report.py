@@ -12,7 +12,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 
-from browser_utils import find_browser
+from utils.browser_utils import find_browser
 
 logger = logging.getLogger(__name__)
 

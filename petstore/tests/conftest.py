@@ -1,8 +1,8 @@
 import uuid
 
 import pytest
-from api.client import APIClient
-from api.endpoints.pet import PetEndpoint
+from petstore.api.client import APIClient
+from petstore.api.endpoints.pet import PetEndpoint
 
 
 @pytest.fixture(scope="session")

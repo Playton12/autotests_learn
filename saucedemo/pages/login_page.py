@@ -1,6 +1,6 @@
 import allure
 from selenium.webdriver.common.by import By
-from pages.base_page import BasePage
+from saucedemo.pages.base_page import BasePage
 from config.settings import UI_BASE_URL
 
 

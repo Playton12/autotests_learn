@@ -1,9 +1,9 @@
 import allure
 import pytest
-from pages.login_page import LoginPage
-from pages.inventory_page import InventoryPage
-from pages.cart_page import CartPage
-from pages.checkout_page import CheckoutPage, OverviewPage, CheckoutCompletePage
+from saucedemo.pages.login_page import LoginPage
+from saucedemo.pages.inventory_page import InventoryPage
+from saucedemo.pages.cart_page import CartPage
+from saucedemo.pages.checkout_page import CheckoutPage, OverviewPage, CheckoutCompletePage
 
 
 @allure.feature("E2E Purchase Flow")

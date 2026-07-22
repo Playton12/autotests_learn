@@ -1,6 +1,6 @@
 import allure
 import pytest
-from schemas.pet_schema import PetSchema
+from petstore.schemas.pet_schema import PetSchema
 
 
 @allure.feature("Pet CRUD")
