@@ -13,17 +13,6 @@ concurrency:
 jobs:
   api-tests:
     runs-on: ubuntu-latest
-    services:
-      petstore:
-        image: swaggerapi/petstore:latest
-        ports:
-          - 8080:8080
-        options: >-
-          --health-cmd "wget --spider -q http://localhost:8080/v2/pet/findByStatus?status=available || exit 1"
-          --health-interval 5s
-          --health-timeout 3s
-          --health-retries 10
-          --health-start-period 10s
     steps:
       - uses: actions/checkout@v4
 
@@ -37,7 +26,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run API tests
-        run: pytest -m api -n auto
+        run: pytest -m api -v
         env:
           BASE_URL: http://localhost:8080/v2
 
@@ -73,9 +62,10 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run UI tests
-        run: pytest -m ui
+        run: pytest -m ui -v
         env:
           HEADLESS: "true"
+          WAIT_TIMEOUT: "20"
 
       - name: Upload Allure results
         if: always()
