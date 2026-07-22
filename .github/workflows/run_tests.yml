@@ -58,16 +58,11 @@ jobs:
       - name: Install Chrome
         uses: browser-actions/setup-chrome@v1
 
-      - name: Diagnose Chrome
-        run: |
-          google-chrome-stable --version || google-chrome --version || echo "Chrome not found"
-          which google-chrome-stable || which google-chrome || echo "Chrome not in PATH"
-
       - name: Install dependencies
         run: pip install -r requirements.txt
 
       - name: Run UI tests
-        run: pytest -m ui -v --tb=long
+        run: pytest -m ui -v
         env:
           HEADLESS: "true"
           WAIT_TIMEOUT: "20"

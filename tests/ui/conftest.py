@@ -6,11 +6,7 @@ import pytest
 from selenium import webdriver
 from selenium.common.exceptions import InvalidSessionIdException, WebDriverException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
 
 from browser_utils import find_browser
 from config.settings import BROWSER, HEADLESS, UI_PASSWORD, UI_USERNAME
@@ -58,20 +54,14 @@ def _create_chrome_driver(binary: str) -> webdriver.Chrome:
         "password_manager_enabled": False,
         "safebrowsing.enabled": False,
     })
-    return webdriver.Chrome(
-        service=ChromeService(ChromeDriverManager().install()),
-        options=options,
-    )
+    return webdriver.Chrome(options=options)
 
 
 def _create_firefox_driver() -> webdriver.Firefox:
     options = webdriver.FirefoxOptions()
     if HEADLESS:
         options.add_argument("--headless")
-    return webdriver.Firefox(
-        service=FirefoxService(GeckoDriverManager().install()),
-        options=options,
-    )
+    return webdriver.Firefox(options=options)
 
 
 @pytest.fixture(scope="function")
