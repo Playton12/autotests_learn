@@ -33,9 +33,10 @@ def _dismiss_any_dialog(d):
         pass
 
 
-def _create_chrome_driver(binary: str) -> webdriver.Chrome:
+def _create_chrome_driver(binary: str | None = None) -> webdriver.Chrome:
     options = webdriver.ChromeOptions()
-    options.binary_location = binary
+    if binary:
+        options.binary_location = binary
     if HEADLESS:
         options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
@@ -66,9 +67,6 @@ def _create_firefox_driver() -> webdriver.Firefox:
 
 @pytest.fixture(scope="function")
 def driver():
-    if not _has_browser:
-        pytest.skip("No browser binary found on this machine")
-
     d = None
     try:
         if BROWSER == "firefox":
@@ -79,6 +77,13 @@ def driver():
         d.set_window_size(1920, 1080)
         _dismiss_any_dialog(d)
         yield d
+    except WebDriverException as e:
+        if d is not None:
+            try:
+                d.quit()
+            except Exception:
+                pass
+        pytest.skip(f"Could not create browser driver: {e}")
     finally:
         if d is not None:
             try:
